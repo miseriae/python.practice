@@ -1,1 +1,0 @@
-secret_key = '7l=jy3hrg9z&&gyg4jkgvf$onut7)o0m=qm=&2p*+adz*39a)s'
