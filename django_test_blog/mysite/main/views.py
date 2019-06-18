@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import BlogPost
+from .models import BlogPost, BlogPostCategory, BlogPostSeries
 from django.http import HttpResponse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
@@ -7,10 +7,31 @@ from django.contrib import messages
 from .forms import NewUserForm
 
 
+def single_slug(request, single_slug):
+    categories = [c.category_slug for c in BlogPostCategory.objects.all()]
+    if single_slug in categories:
+        matching_series = BlogPostSeries.objects.filter(post_category__category_slug=single_slug)
+
+        series_urls = {}
+        for m in matching_series.all():
+            part_one = BlogPost.objects.filter(post_series__post_series=m.post_series).earliest("post_published")
+            series_urls[m] = part_one.post_slug
+
+        return render(request=request,
+                      template_name="main/category.html",
+                      context={"part_ones": series_urls})
+    
+    posts = [p.post_slug for p in BlogPost.objects.all()]
+    if single_slug in posts:
+        return HttpResponse(f"{single_slug} is a post!")
+
+    return HttpResponse(f"{single_slug} does not correspond to anything")
+
+
 def homepage(request):
     return render(request=request,
-                  template_name="main/home.html",
-                  context={"posts": BlogPost.objects.all})
+                  template_name="main/categories.html",
+                  context={"categories": BlogPostCategory.objects.all})
 
 def register(request):
     if request.method == "POST":
