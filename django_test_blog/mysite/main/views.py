@@ -23,7 +23,13 @@ def single_slug(request, single_slug):
     
     posts = [p.post_slug for p in BlogPost.objects.all()]
     if single_slug in posts:
-        return HttpResponse(f"{single_slug} is a post!")
+        this_post = BlogPost.objects.get(post_slug=single_slug)
+        post_from_series = BlogPost.objects.filter(post_series__post_series=this_post.post_series).order_by("post_published")
+
+
+        return render(request=request,
+                      template_name="main/post.html",
+                      context={"post": this_post})
 
     return HttpResponse(f"{single_slug} does not correspond to anything")
 
