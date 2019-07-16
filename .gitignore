@@ -107,3 +107,5 @@ venv.bak/
 #vscode
 .vscode
 telegram_ascii_bot/log_file.json
+telegram_bot/
+.telegram_bot
