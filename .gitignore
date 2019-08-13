@@ -56,7 +56,7 @@ coverage.xml
 local_settings.py
 db.sqlite3
 secrets.py
-*.media/
+media/
 
 # Flask stuff:
 instance/
